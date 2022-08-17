@@ -1,0 +1,26 @@
+name: cicd
+
+on:
+  push:
+    branches:
+      - "**"
+
+env:
+  HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Try to run docker-compose linked 2 image (sql and nodejs) (just for fun :D)
+        env:
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_HOST_PORT: ${{ secrets.DB_HOST_PORT }}
+          DB_CONTAINER_PORT: ${{ secrets.DB_CONTAINER_PORT }}
+          NODE_HOST_PORT: ${{ secrets.NODE_HOST_PORT }}
+          NODE_CONTAINER_PORT: ${{ secrets.NODE_CONTAINER_PORT }}
+        run: docker-compose -f docker/docker-compose.yml  up

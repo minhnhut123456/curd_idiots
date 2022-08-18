@@ -1,21 +1,7 @@
 
 version: '3.8'
 services:
-  mysqldb:
-    # platform: linux/x86_64
-    image: mysql:5.7
-    restart: unless-stopped
-    environment:
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-      - MYSQL_DATABASE=${DB_NAME}
-    ports:
-      - ${DB_HOST_PORT}:${DB_CONTAINER_PORT}
-    volumes:
-      - db:/var/lib/mysql
-
   app:
-    depends_on:
-      - mysqldb
     build:
       context: ..
       dockerfile: docker/Dockerfile
@@ -24,13 +10,11 @@ services:
       - ${NODE_HOST_PORT}:${NODE_CONTAINER_PORT}
     environment:
       - NODE_ENV=production
-      - DB_HOST=mysqldb
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - DB_PORT=${DB_CONTAINER_PORT}
+      - DB_HOST=${EXTERNAL_DB_HOST}
+      - DB_USER=${EXTERNAL_DB_USER}
+      - DB_PASSWORD=${EXTERNAL_DB_PASSWORD}
+      - DB_NAME=${EXTERNAL_DB_NAME}
+      - DB_PORT=${EXTERNAL_DB_PORT}
       - PORT=${NODE_CONTAINER_PORT}
     stdin_open: true
     tty: true
-volumes: 
-  db:

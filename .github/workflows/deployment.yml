@@ -8,6 +8,12 @@ on:
 env:
   HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
   IMAGE_TAG: registry.heroku.com/${{ secrets.CURD_IDIOT_APP_NAME }}/web
+  EXTERNAL_DB_HOST: ${{ secrets.EXTERNAL_DB_HOST }}
+  EXTERNAL_DB_USER: ${{ secrets.EXTERNAL_DB_USER }}
+  EXTERNAL_DB_NAME: ${{ secrets.EXTERNAL_DB_NAME }}
+  EXTERNAL_DB_PORT: ${{ secrets.EXTERNAL_DB_PORT }}
+  NODE_HOST_PORT: ${{ secrets.NODE_HOST_PORT }}
+  NODE_CONTAINER_PORT: ${{ secrets.NODE_CONTAINER_PORT }}
 
 jobs:
   deploy:
@@ -17,16 +23,15 @@ jobs:
       - uses: actions/checkout@v2
       - name: Login to Heroku Container registry
         run: heroku container:login 
-      - name: Try to connect external db and run app
-        env:
-          EXTERNAL_DB_HOST: ${{ secrets.EXTERNAL_DB_HOST }}
-          EXTERNAL_DB_USER: ${{ secrets.EXTERNAL_DB_USER }}
-          EXTERNAL_DB_NAME: ${{ secrets.EXTERNAL_DB_NAME }}
-          EXTERNAL_DB_PORT: ${{ secrets.EXTERNAL_DB_PORT }}
-          NODE_HOST_PORT: ${{ secrets.NODE_HOST_PORT }}
-          NODE_CONTAINER_PORT: ${{ secrets.NODE_CONTAINER_PORT }}
+
+      - name: Try to connect external db and run app          
         run: docker-compose -f docker/docker-compose.yml up -d
+
+      - name: Config runtime eviroment variable 
+        run: heroku config:set NODE_ENV=production DB_HOST=$EXTERNAL_DB_HOST DB_USER=$EXTERNAL_DB_USER DB_NAME=$EXTERNAL_DB_NAME DB_PORT=$EXTERNAL_DB_PORT PORT=$NODE_CONTAINER_PORT
+
       - name: Push image to heroku register
         run: docker push $IMAGE_TAG
+
       - name: Release
         run: heroku container:release web --app ${{ secrets.CURD_IDIOT_APP_NAME }}

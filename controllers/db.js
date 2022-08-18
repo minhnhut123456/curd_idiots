@@ -2,8 +2,6 @@
 
 const mysql = require('mysql2');
 
-console.log(process.env.DB_HOST,'llll,jksnvjks')
-
 //local mysql db connection
 const pool = mysql.createPool({
     host     : process.env.DB_HOST,

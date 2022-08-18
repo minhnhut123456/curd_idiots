@@ -16,6 +16,7 @@ exports.list_all_product =  async function list_all_product(req, res) {
     try {
         await beforeActions()
         const [rows, fields]= await connection.execute("Select * from products");
+        console.log(rows,"llllllll")
         res.send(rows)
     } catch (error) {
         console.error(error)

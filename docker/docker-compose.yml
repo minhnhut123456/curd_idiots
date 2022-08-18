@@ -6,6 +6,7 @@ services:
       context: ..
       dockerfile: docker/Dockerfile
     restart: unless-stopped
+    image: ${IMAGE_TAG}
     ports:
       - ${NODE_HOST_PORT}:${NODE_CONTAINER_PORT}
     environment:

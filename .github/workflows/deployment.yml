@@ -12,6 +12,7 @@ env:
   EXTERNAL_DB_USER: ${{ secrets.EXTERNAL_DB_USER }}
   EXTERNAL_DB_NAME: ${{ secrets.EXTERNAL_DB_NAME }}
   EXTERNAL_DB_PORT: ${{ secrets.EXTERNAL_DB_PORT }}
+  EXTERNAL_DB_PASSWORD: ${{ secrets.EXTERNAL_DB_PASSWORD }}
   NODE_HOST_PORT: ${{ secrets.NODE_HOST_PORT }}
   NODE_CONTAINER_PORT: ${{ secrets.NODE_CONTAINER_PORT }}
 
@@ -27,7 +28,7 @@ jobs:
       - name: Try to connect external db and run app          
         run: docker-compose -f docker/docker-compose.yml up -d
 
-      - name: Config runtime eviroment variable 
+      - name: Inject runtime eviroment variable to heroku
         run: >
           heroku config:set
           NODE_ENV=production

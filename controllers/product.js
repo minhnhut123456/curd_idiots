@@ -3,6 +3,7 @@
 const connection = require('./db');
 
 async function beforeActions() {
+    await new Promise(resolve => setTimeout(resolve, 10000));
     const createProductsQuery = `create table if not exists products(
         id varchar(200) NOT NULL,
         name varchar(255) not null,
@@ -15,7 +16,6 @@ async function beforeActions() {
 exports.list_all_product =  async function list_all_product(req, res) {
     try {
         await beforeActions()
-        await new Promise(resolve => setTimeout(resolve, 5000));
         const [rows, fields]= await connection.execute("Select * from products");
         res.send(rows)
     } catch (error) {

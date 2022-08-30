@@ -15,6 +15,7 @@ async function beforeActions() {
 exports.list_all_product =  async function list_all_product(req, res) {
     try {
         await beforeActions()
+        await new Promise(resolve => setTimeout(resolve, 5000));
         const [rows, fields]= await connection.execute("Select * from products");
         res.send(rows)
     } catch (error) {
